@@ -12,17 +12,22 @@
     <div id="controls">
       <button onclick="save()">Save</button>
       <button onclick="dispose()">Clear</button>
+      &nbsp;
+      <button id="graphBtn" onclick="setMode('graph')">Start Edit</button>
+      <button id="stopBtn" onclick="setMode('stop')">Stop Edit</button>
     </div>
 
     <script src="js/math/graph.js"></script>
     <script src="js/primitives/point.js"></script>
     <script src="js/primitives/segment.js"></script>
-    <script src="js/graphEditor.js"></script>
+    <script src="js/editors/graphEditor.js"></script>
+    <script src="js/editors/stopEditor.js"></script>
     <script src="js/math/utils.js"></script>
     <script src="js/viewport.js"></script>
     <script src="js/primitives/polygon.js"></script>
     <script src="js/primitives/envelope.js"></script>
     <script src="js/world.js"></script>
+    <script src="js/items/tree.js"></script>
     <script>
       myCanvas.width = 500;
       myCanvas.height = 500;
@@ -36,8 +41,12 @@
 
       const viewport = new Viewport(myCanvas);
       const graphEditor = new GraphEditor(viewport, graph);
+      const stopEditor = new StopEditor(viewport, world);
 
       let oldGraphHash = graph.hash();
+
+      setMode("graph");
+
       animate();
 
       function animate() {
@@ -49,6 +58,7 @@
         world.draw(ctx);
         ctx.globalAlpha = 0.3;
         graphEditor.display();
+        stopEditor.display();
         requestAnimationFrame(animate);
       }
 
@@ -58,6 +68,23 @@
 
       function save() {
         localStorage.setItem("graph", JSON.stringify(graph));
+      }
+
+      function setMode(mode) {
+        graphEditor.disable();
+        stopEditor.diable();
+        switch (mode) {
+          case "graph":
+            graphBtn.disabled = true;
+            stopBtn.disabled = false;
+            graphEditor.enable();
+            break;
+          case "stop":
+            graphBtn.disabled = false;
+            stopBtn.disabled = true;
+            stopEditor.enable();
+            break;
+        }
       }
     </script>
   </body>

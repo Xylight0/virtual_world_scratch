@@ -74,7 +74,7 @@ class World {
       // check if tree too close to other trees
       if (keep) {
         for (const tree of trees) {
-          if (distance(tree, p) < this.treeSize) {
+          if (distance(tree.center, p) < this.treeSize) {
             keep = false;
             break;
           }
@@ -94,7 +94,7 @@ class World {
       }
 
       if (keep) {
-        trees.push(p);
+        trees.push(new Tree(p, this.treeSize));
         tryCount = 0;
       }
       tryCount++;
@@ -150,7 +150,6 @@ class World {
       bases.push(new Envelope(seg, this.buildingWidth).poly);
     }
 
-    
     const eps = 0.001;
     for (let i = 0; i < bases.length - 1; i++) {
       for (let j = i + 1; j < bases.length; j++) {
@@ -178,7 +177,7 @@ class World {
       seg.draw(ctx, { color: "white", width: 4 });
     }
     for (const tree of this.trees) {
-      tree.draw(ctx, { size: this.treeSize, color: "rgba(0,0,0,0.5" });
+      tree.draw(ctx);
     }
     for (const bld of this.buildings) {
       bld.draw(ctx);

@@ -11,15 +11,40 @@ class GraphEditor {
     this.hovered = null;
     this.mouse = null;
     this.dragging = false;
+  }
 
+  enable() {
     this.#addEventListeners();
   }
 
+  disable() {
+    this.#removeEventListeners();
+    this.selected = null;
+    this.hovered = null;
+  }
+
   #addEventListeners() {
-    this.canvas.addEventListener("mousedown", this.#handleMouseDown.bind(this));
-    this.canvas.addEventListener("mousemove", this.#handleMouseMove.bind(this));
-    this.canvas.addEventListener("contextmenu", (evt) => evt.preventDefault());
-    this.canvas.addEventListener("mouseup", () => (this.dragging = false));
+    this.controller = new AbortController();
+    this.canvas.addEventListener(
+      "mousedown",
+      this.#handleMouseDown.bind(this),
+      { signal: this.controller.signal }
+    );
+    this.canvas.addEventListener(
+      "mousemove",
+      this.#handleMouseMove.bind(this),
+      { signal: this.controller.signal }
+    );
+    this.canvas.addEventListener("contextmenu", (evt) => evt.preventDefault(), {
+      signal: this.controller.signal,
+    });
+    this.canvas.addEventListener("mouseup", () => (this.dragging = false), {
+      signal: this.controller.signal,
+    });
+  }
+
+  #removeEventListeners() {
+    this.controller.abort();
   }
 
   #handleMouseMove(evt) {

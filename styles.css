@@ -11,3 +11,16 @@ h1 {
 #myCanvas {
   background-color: green;
 }
+
+button {
+  background-color: white;
+  font-size: 20px;
+  padding: 5px 7px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:disabled {
+   background-color: gray;
+}
